@@ -81,4 +81,11 @@
             L.marker(location.coords, { icon: location.icon })
                 .addTo(map)
                 .bindPopup(`
-                    <strong
+                    <strong>${location.name}</strong><br>
+                    ${location.description}<br>
+                    <a href="${location.link}" target="_blank">View More</a>
+                `);
+        });
+    </script>
+</body>
+</html>

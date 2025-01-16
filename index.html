@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Campaign Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .leaflet-popup-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map', {
+            crs: L.CRS.Simple,  // Use simple coordinates for custom maps
+            minZoom: -2,
+            maxZoom: 2
+        });
+
+        // Set map bounds based on your image dimensions
+        const bounds = [[0, 0], [1000, 1000]];  // Adjust these based on your image
+        const image = L.imageOverlay('your-map-image.jpg', bounds).addTo(map);
+        map.fitBounds(bounds);
+
+        // Define faction icons
+        const factionIcons = {
+            republic: L.icon({
+                iconUrl: 'republic-icon.png',  // Replace with your icon URLs
+                iconSize: [32, 32]
+            }),
+            separatist: L.icon({
+                iconUrl: 'separatist-icon.png',
+                iconSize: [32, 32]
+            })
+        };
+
+        // Store markers in an object for easy updates
+        const locations = {
+            'Naboo': {
+                coords: [250, 250],
+                faction: 'republic',
+                notionLink: 'your-notion-page-url-1',
+                description: 'Peaceful planet with abundant resources'
+            },
+            'Geonosis': {
+                coords: [750, 750],
+                faction: 'separatist',
+                notionLink: 'your-notion-page-url-2',
+                description: 'Droid factory world'
+            }
+        };
+
+        // Function to add or update markers
+        function updateLocation(name, faction) {
+            const location = locations[name];
+            
+            // Remove existing marker if updating
+            if (location.marker) {
+                map.removeLayer(location.marker);
+            }
+
+            // Create new marker
+            location.faction = faction;
+            location.marker = L.marker(location.coords, {
+                icon: factionIcons[faction]
+            }).addTo(map);
+
+            // Add popup with link and description
+            location.marker.bindPopup(`
+                <strong>${name}</strong><br>
+                ${location.description}<br>
+                <a href="${location.notionLink}" target="_blank">View Details</a>
+            `);
+        }
+
+        // Initialize all locations
+        Object.keys(locations).forEach(name => {
+            updateLocation(name, locations[name].faction);
+        });
+
+        // Example of how to update a location's faction:
+        // updateLocation('Naboo', 'separatist');
+    </script>
+</body>
+</html>

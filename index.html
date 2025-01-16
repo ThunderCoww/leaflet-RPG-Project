@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaflet Map with Custom Markers</title>
+    <title>Leaflet Map with Custom Background</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <style>
         body {
@@ -17,10 +17,6 @@
             max-width: 1200px;
             margin: 20px auto;
         }
-        .leaflet-popup-content {
-            font-size: 14px;
-            line-height: 1.4;
-        }
     </style>
 </head>
 <body>
@@ -28,28 +24,35 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <script>
-        // Initialize the map
+        // Initialize the map with a simple CRS for a custom background
         const map = L.map('map', {
-            center: [0, 0], // Center of the map (latitude, longitude)
-            zoom: 2, // Initial zoom level
-            crs: L.CRS.EPSG3857 // Default CRS for Leaflet
+            crs: L.CRS.Simple,
+            minZoom: -2,
+            maxZoom: 2,
+            center: [0, 0],
+            zoom: 0
         });
 
-        // Add a base tile layer (e.g., OpenStreetMap)
-        L.tileLayer('8k_galaxy_map.png', {
-            attribution: 'Reddit'
-        }).addTo(map);
+        // Define image dimensions (replace with your image's dimensions)
+        const imageBounds = [[0, 0], [8098, 8000]]; // Adjust based on your image dimensions
+        const imageUrl = '8k_galaxy_map.png'; // Path to your background image
+
+        // Add the image overlay
+        L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+        // Fit the map bounds to the image
+        map.fitBounds(imageBounds);
 
         // Custom icons
         const republicIcon = L.icon({
-            iconUrl: 'republic.png', // Path to the icon
-            iconSize: [32, 32], // Size of the icon
-            iconAnchor: [16, 16], // Point of the icon that corresponds to the marker's location
-            popupAnchor: [0, -16] // Point from which the popup opens relative to the iconAnchor
+            iconUrl: 'republic.png',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -16]
         });
 
         const separatistIcon = L.icon({
-            iconUrl: 'separatist.png', // Path to the icon
+            iconUrl: 'separatist.png',
             iconSize: [32, 32],
             iconAnchor: [16, 16],
             popupAnchor: [0, -16]
@@ -59,27 +62,23 @@
         const locations = [
             {
                 name: 'Naboo',
-                coords: [10, 10],
+                coords: [1000, 1000], // Adjust coordinates to match the image's scale
                 description: 'Peaceful planet with abundant resources.',
-                icon: republicIcon
+                icon: republicIcon,
+                link: 'https://example.com/naboo'
             },
             {
                 name: 'Geonosis',
-                coords: [-15, 20],
+                coords: [4000, 3000], // Adjust coordinates to match the image's scale
                 description: 'Droid factory world.',
-                icon: separatistIcon
+                icon: separatistIcon,
+                link: 'https://example.com/geonosis'
             }
         ];
 
-        // Add markers with popups
+        // Add markers with popups containing links
         locations.forEach(location => {
             L.marker(location.coords, { icon: location.icon })
                 .addTo(map)
                 .bindPopup(`
-                    <strong>${location.name}</strong><br>
-                    ${location.description}
-                `);
-        });
-    </script>
-</body>
-</html>
+                    <strong

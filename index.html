@@ -29,18 +29,18 @@
         });
 
         // Set map bounds based on your image dimensions
-        const bounds = [[0, 0], [1000, 1000]];  // Adjust these based on your image
-        const image = L.imageOverlay('your-map-image.jpg', bounds).addTo(map);
+        const bounds = [[0, 0], [8098, 8000]];  // Adjust these based on your image
+        const image = L.imageOverlay('8k_galaxy_map.png', bounds).addTo(map);
         map.fitBounds(bounds);
 
         // Define faction icons
         const factionIcons = {
             republic: L.icon({
-                iconUrl: 'republic-icon.png',  // Replace with your icon URLs
+                iconUrl: 'republic.png',  // Replace with your icon URLs
                 iconSize: [32, 32]
             }),
             separatist: L.icon({
-                iconUrl: 'separatist-icon.png',
+                iconUrl: 'separatist.png',
                 iconSize: [32, 32]
             })
         };
